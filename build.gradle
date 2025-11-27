@@ -23,6 +23,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-glfw"
     implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.joml:joml:1.10.7"
 
     // Native Libraries (based on your operating system)
     runtimeOnly "org.lwjgl:lwjgl::natives-windows"
