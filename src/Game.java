@@ -40,6 +40,7 @@ public class Game {
         //Current time, used for calculations based on time passed
         long lastTime = System.nanoTime();
 
+        //Main game loop
         while (running) {
             long now = System.nanoTime();
             double deltaTime = (now - lastTime) / 1_000_000_000.0;
@@ -68,7 +69,7 @@ public class Game {
         player.rotationY = (float) mouseX;
         player.rotationX = (float) mouseY;
     }
-    }
+
 
     private void render() {
 
