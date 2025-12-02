@@ -57,7 +57,7 @@ public class Game {
     }
 
     private void update(double deltaTime) {
-        //add game logic later
+
         float speed = 5.0f; // Einheiten pro Sekunde
 
         if (moveForward)  player.posZ -= speed * deltaTime;

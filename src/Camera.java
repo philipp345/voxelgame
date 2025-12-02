@@ -3,11 +3,31 @@ import org.joml.Matrix4f;
 
 public class Camera {
 
-    public Vector3f position = new Vector3f(0, 0, 0);
-    public float pitch, yaw;
+    private Vector3f position = new Vector3f(0, 0, 0);
+    private float pitch, yaw;
 
-    yaw   += mouseDeltaX * sensitivity;
-    pitch -= mouseDeltaY * sensitivity;
+
+    private float sensitivity = 1;
+
+    public float getSensitivity() {
+        return sensitivity;
+    }
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
+
+    public void updateView(float mouseDeltaX, float mouseDeltaY) {
+        this.yaw += mouseDeltaX * sensitivity;
+        this.pitch -= mouseDeltaY * sensitivity;
+    }
+
+    public void updatePosition(float dx, float dy, float dz){
+        this.position.x += dx;
+        this.position.y += dy;
+        this.position.z += dz;
+    }
+
 
     public Matrix4f getViewMatrix() {
         return new Matrix4f()
