@@ -22,10 +22,10 @@ public class Camera {
         this.pitch -= mouseDeltaY * sensitivity;
     }
 
-    public void updatePosition(float dx, float dy, float dz){
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
+    public void updatePosition(float x, float y, float z){
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
     }
 
 

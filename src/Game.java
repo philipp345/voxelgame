@@ -12,6 +12,7 @@ public class Game {
 
     // Mouse movement
     private double mouseX, mouseY;
+    private double lastMouseX, lastMouseY;
 
     public void start() {
         //Setup graphical user interface
@@ -60,17 +61,19 @@ public class Game {
 
         float speed = 5.0f; // Einheiten pro Sekunde
 
-        if (moveForward)  player.posZ -= speed * deltaTime;
+
+        if (moveForward) player.posZ -= speed * deltaTime;
         if (moveBackward) player.posZ += speed * deltaTime;
-        if (moveLeft)     player.posX -= speed * deltaTime;
-        if (moveRight)    player.posX += speed * deltaTime;
+        if (moveLeft) player.posX -= speed * deltaTime;
+        if (moveRight) player.posX += speed * deltaTime;
 
-        // Maus kann Kamera drehen
-        player.rotationY = (float) mouseX;
-        player.rotationX = (float) mouseY;
+        //Update Camera with current position and changes of mouse
+        Camera.updatePosition((float)player.posX, (float)player.posY, (float)player.posZ);
+        Camera.updateView((float)(mouseX-lastMouseX),(float)(mouseY-lastMouseY));
+
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
     }
-
-
     private void render() {
 
     }
