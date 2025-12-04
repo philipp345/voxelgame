@@ -14,6 +14,9 @@ public class Game {
     private double mouseX, mouseY;
     private double lastMouseX, lastMouseY;
 
+    // Camera field
+    private Camera camera;
+
     public void start() {
         //Setup graphical user interface
         GLFW.glfwInit();
@@ -40,6 +43,9 @@ public class Game {
 
         //Current time, used for calculations based on time passed
         long lastTime = System.nanoTime();
+
+        //Instantiate new camera object, the same object will be used during the entire main game loop
+        camera = new Camera();
 
         //Main game loop
         while (running) {
@@ -68,8 +74,8 @@ public class Game {
         if (moveRight) player.posX += speed * deltaTime;
 
         //Update Camera with current position and changes of mouse
-        Camera.updatePosition((float)player.posX, (float)player.posY, (float)player.posZ);
-        Camera.updateView((float)(mouseX-lastMouseX),(float)(mouseY-lastMouseY));
+        camera.updatePosition((float)player.posX, (float)player.posY, (float)player.posZ);
+        camera.updateView((float)(mouseX-lastMouseX),(float)(mouseY-lastMouseY));
 
         lastMouseX = mouseX;
         lastMouseY = mouseY;
