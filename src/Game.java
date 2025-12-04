@@ -17,6 +17,9 @@ public class Game {
     // Camera field
     private Camera camera;
 
+    // Player field
+    private Player player;
+
     public void start() {
         //Setup graphical user interface
         GLFW.glfwInit();
@@ -47,6 +50,9 @@ public class Game {
         //Instantiate new camera object, the same object will be used during the entire main game loop
         camera = new Camera();
 
+        //Instantiate new player object, the same object will be used ruing the entire main game loop
+        player = new Player();
+
         //Main game loop
         while (running) {
             long now = System.nanoTime();
@@ -66,15 +72,16 @@ public class Game {
     private void update(double deltaTime) {
 
         float speed = 5.0f; // Einheiten pro Sekunde
+        double deltaPosition = speed * deltaTime;
 
 
-        if (moveForward) player.posZ -= speed * deltaTime;
-        if (moveBackward) player.posZ += speed * deltaTime;
-        if (moveLeft) player.posX -= speed * deltaTime;
-        if (moveRight) player.posX += speed * deltaTime;
+        if (moveForward) player.setPositionZ((player.getPositionZ() - deltaPosition));
+        if (moveBackward) player.setPositionZ((player.getPositionZ() + deltaPosition));
+        if (moveLeft) player.setPositionX((player.getPositionX() - deltaPosition));
+        if (moveRight) player.setPositionX((player.getPositionX() + deltaPosition));
 
         //Update Camera with current position and changes of mouse
-        camera.updatePosition((float)player.posX, (float)player.posY, (float)player.posZ);
+        camera.updatePosition((float)player.getPositionX(), (float)player.getPositionY(), (float)player.getPositionZ());
         camera.updateView((float)(mouseX-lastMouseX),(float)(mouseY-lastMouseY));
 
         lastMouseX = mouseX;
