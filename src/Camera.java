@@ -20,6 +20,8 @@ public class Camera {
     public void updateView(float mouseDeltaX, float mouseDeltaY) {
         this.yaw += mouseDeltaX * sensitivity;
         this.pitch -= mouseDeltaY * sensitivity;
+        //To prevent the camera from rotating over the player's head
+        this.pitch = Math.clamp(this.pitch, -89f, 89f);
     }
 
     public void updatePosition(float x, float y, float z){
