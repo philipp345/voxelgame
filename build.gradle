@@ -26,9 +26,9 @@ dependencies {
     implementation "org.joml:joml:1.10.7"
 
     // Native Libraries (based on your operating system)
-    runtimeOnly "org.lwjgl:lwjgl::natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl::natives-macos-arm64"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::natives-macos-arm64"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::natives-macos-arm64"
 
     // Part of original build.gradle file
     testImplementation platform('org.junit:junit-bom:5.10.0')
