@@ -21,7 +21,7 @@ public class Game {
     private long window;
 
     //Shader program for HUD
-    private int hudShaderProgram;
+    private Shader hudShaderProgram;
 
     public void start() {
         //Initialize graphical setup
@@ -71,9 +71,9 @@ public class Game {
         // Disable depth test, so HUD is always visible
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         // Activate shaders
-        GL20.glUseProgram(hudShaderProgram);
+        hudShaderProgram.bind();
         // Set window uniform
-        int loc = GL20.glGetUniformLocation(hudShaderProgram, "uResolution");
+        int loc = GL20.glGetUniformLocation(hudShaderProgram.getId(), "uResolution");
         GL20.glUniform2f(loc, windowWidth, windowHeight);
         // VAO des Fadenkreuzes binden
         GL30.glBindVertexArray(crosshairVAO);
@@ -82,7 +82,7 @@ public class Game {
         // VAO entbinden
         GL30.glBindVertexArray(0);
         // Shader ausschalten
-        GL20.glUseProgram(0);
+        hudShaderProgram.unbind();
         // Activate depth test again
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
@@ -123,42 +123,7 @@ public class Game {
             mouseY = y;
         });
 
-        createHUDShader();
-        createCrosshairVAO();
-    }
-
-    private void createCrosshairVAO() {
-        float[] vertices = {
-                // x, y, z
-                0.0f,  0.05f, 0.0f,
-                -0.05f, -0.05f, 0.0f,
-                0.05f, -0.05f, 0.0f
-        };
-
-        // VAO erzeugen und binden
-        vaoId = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vaoId);
-
-        // VBO erzeugen und Daten hochladen
-        FloatBuffer buffer = MemoryUtil.memAllocFloat(vertices.length);
-        buffer.put(vertices).flip();
-
-        vboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-
-        // Vertex-Attribute definieren (Position = Location 0)
-        GL20.glVertexAttribPointer(0, 3, GL15.GL_FLOAT, false, 0, 0);
-        GL20.glEnableVertexAttribArray(0);
-
-        // Aufräumen
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        GL30.glBindVertexArray(0);
-        MemoryUtil.memFree(buffer);
-    }
-
-    private void createHUDShader(){
-        // Vertex-Shader-Code
+        //Define Shader
         String vertexShaderSource =
                 "#version 330 core\n" +
                         "layout(location = 0) in vec2 aPos;\n" +
@@ -169,7 +134,6 @@ public class Game {
                         "    gl_Position = vec4(ndc, 0.0, 1.0);\n" +
                         "}";
 
-        // Fragment-Shader-Code
         String fragmentShaderSource =
                 "#version 330 core\n" +
                         "out vec4 FragColor;\n" +
@@ -177,42 +141,17 @@ public class Game {
                         "    FragColor = vec4(1.0, 1.0, 1.0, 0.7);\n" +
                         "}";
 
-        int vertexShader = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-        GL20.glShaderSource(vertexShader, vertexShaderSource);
-        GL20.glCompileShader(vertexShader);
-        checkCompileErrors(vertexShader, "VERTEX");
 
-        int fragmentShader = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-        GL20.glShaderSource(fragmentShader, fragmentShaderSource);
-        GL20.glCompileShader(fragmentShader);
-        checkCompileErrors(fragmentShader, "FRAGMENT");
+        //Create Shader
+        hudShaderProgram = new Shader(vertexShaderSource, fragmentShaderSource);
 
-        // Shader-Programm erstellen
-        hudShaderProgram = GL20.glCreateProgram();
-        GL20.glAttachShader(hudShaderProgram, vertexShader);
-        GL20.glAttachShader(hudShaderProgram, fragmentShader);
-        GL20.glLinkProgram(hudShaderProgram);
-        checkCompileErrors(hudShaderProgram, "PROGRAM");
 
-        // Einzelne Shader löschen (sind jetzt im Programm drin)
-        GL20.glDeleteShader(vertexShader);
-        GL20.glDeleteShader(fragmentShader);
+
+        Mesh.createCrosshairVAO();
     }
-    private void checkCompileErrors(int shader, String type) {
-        int success;
-        if (type.equals("PROGRAM")) {
-            success = GL20.glGetProgrami(shader, GL20.GL_LINK_STATUS);
-            if (success == GL11.GL_FALSE) {
-                String infoLog = GL20.glGetProgramInfoLog(shader);
-                System.err.println("ERROR::PROGRAM_LINKING_ERROR\n" + infoLog);
-            }
-        } else {
-            success = GL20.glGetShaderi(shader, GL20.GL_COMPILE_STATUS);
-            if (success == GL11.GL_FALSE) {
-                String infoLog = GL20.glGetShaderInfoLog(shader);
-                System.err.println("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog);
-            }
-        }
-    }
+
+
+
+
 
 }
